@@ -3,6 +3,7 @@ module github.com/webchen/gotools
 go 1.16
 
 require (
+	github.com/elastic/go-elasticsearch/v8 v8.0.0-20210519083322-55daf7425ecb
 	github.com/go-redis/redis/v8 v8.9.0
 	github.com/gorilla/mux v1.8.0
 	github.com/json-iterator/go v1.1.11

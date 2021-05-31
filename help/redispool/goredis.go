@@ -25,7 +25,7 @@ func init() {
 		vv := v.(map[string]interface{})
 
 		host := vv["host"].(string)         // conf.GetConfig("redis."+k+".host", "").(string)
-		port := str.Convert2U32(vv["host"]) //conf.GetConfig("redis."+k+".port", "").(string)
+		port := str.Convert2U32(vv["port"]) //conf.GetConfig("redis."+k+".port", "").(string)
 		db := str.Convert2U32(vv["db"])     // conf.GetConfig("redis."+k+".db", "0").(string)
 		auth := vv["auth"].(string)         // conf.GetConfig("redis."+k+".auth", "").(string)
 		poolSize := str.Convert2U32(vv["PoolSize"])
