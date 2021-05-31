@@ -11,7 +11,6 @@ import (
 
 	"log"
 	"os"
-	"runtime"
 	"time"
 	//	log "github.com/sirupsen/logrus"
 )
@@ -246,7 +245,8 @@ func Exited(format string, v ...interface{}) {
 		cmdLogger.Println(s)
 	}
 	//emailtool.SendAlertEmail(s)
-	runtime.Goexit()
+	os.Exit(-1)
+	//	runtime.Goexit()
 }
 
 // ExitedProcess 如果err!=nil，则打印日志，并退出
