@@ -15,10 +15,7 @@ import (
 // Ctx redis的CTX
 var Ctx = context.Background()
 
-// Client redis对象
-//var Client *redis.Client
-
-var clientList map[string]*redis.Client
+var clientList = make(map[string]*redis.Client)
 
 func init() {
 
