@@ -50,8 +50,5 @@ func (m *TryMutex) TryLock() bool {
 
 // IsLocked 是否已锁
 func (m *TryMutex) IsLocked() bool {
-	if atomic.LoadInt32(m.status) == LockedFlag {
-		return true
-	}
-	return false
+	return atomic.LoadInt32(m.status) == LockedFlag
 }
