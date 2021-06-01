@@ -123,13 +123,10 @@ func Convert2U32(i interface{}) uint32 {
 	switch i.(type) {
 	case float64:
 		num = uint32(i.(float64))
-		break
 	case string:
 		num = String2UInt(i.(string))
-		break
 	case int64:
 		num = uint32(i.(int64))
-		break
 	case int:
 		num = uint32(i.(int))
 	default:
