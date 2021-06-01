@@ -145,3 +145,33 @@ func Md5(strs string) string {
 	//将str写入到w中
 	return fmt.Sprintf("%x", w.Sum(nil))
 }
+
+// U32toString  uin32转string
+func U32toString(num uint32) string {
+	return strconv.Itoa(int(num))
+}
+
+func String2UInt64(s string) uint64 {
+	i, err := strconv.ParseUint(s, 10, 64)
+	if err != nil {
+		i = 0
+	}
+	return i
+}
+
+func Convert2U64(i interface{}) uint64 {
+	var num uint64 = 0
+	switch i.(type) {
+	case float64:
+		num = uint64(i.(float64))
+	case string:
+		num = String2UInt64(i.(string))
+	case int64:
+		num = uint64(i.(int64))
+	case int:
+		num = uint64(i.(int))
+	default:
+		break
+	}
+	return num
+}
