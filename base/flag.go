@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/webchen/gotools/base/dirtool"
+	"github.com/webchen/gotools/help/tool/conf"
 )
 
 var builded = false
@@ -64,7 +65,11 @@ func DoBuild(osName string) {
 			}
 		}
 	}
-	deployPath := dirtool.GetParentDirectory(dirtool.GetParentDirectory(dir)) + string(os.PathSeparator) + "carGateway_pub" + string(os.PathSeparator) + buildDir
+	deployConf := conf.GetConfig("system.deployPathName", "public").(string)
+	if deployConf == "" {
+		deployConf = "public"
+	}
+	deployPath := dirtool.GetParentDirectory(dirtool.GetParentDirectory(dir)) + string(os.PathSeparator) + deployConf + string(os.PathSeparator) + buildDir
 	dirtool.MustCreateDir(deployPath)
 	deployConfigPath := deployPath + "config" + string(os.PathSeparator)
 	dirtool.MustCreateDir(deployConfigPath)
