@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	base "github.com/webchen/gotools/base"
+	"github.com/webchen/gotools/base/conf"
 	"github.com/webchen/gotools/base/jsontool"
 	"github.com/webchen/gotools/enum/def"
-	"github.com/webchen/gotools/help/tool/conf"
 
 	"log"
 	"os"

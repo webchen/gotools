@@ -10,8 +10,8 @@ import (
 	"strings"
 
 	"github.com/webchen/gotools/base"
+	"github.com/webchen/gotools/base/conf"
 	"github.com/webchen/gotools/base/dirtool"
-	"github.com/webchen/gotools/help/tool/conf"
 )
 
 //var buildDir = "build" + string(os.PathSeparator)

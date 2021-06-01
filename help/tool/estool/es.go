@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/webchen/gotools/base/conf"
 	"github.com/webchen/gotools/base/jsontool"
-	"github.com/webchen/gotools/help/tool/conf"
 	"github.com/webchen/gotools/help/tool/nettool"
 
 	"github.com/elastic/go-elasticsearch/v8"

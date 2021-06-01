@@ -5,7 +5,7 @@ import (
 	"net/smtp"
 	"strings"
 
-	"github.com/webchen/gotools/help/tool/conf"
+	"github.com/webchen/gotools/base/conf"
 )
 
 var username = conf.GetConfig("email.sender", "altidc@qq.com").(string)

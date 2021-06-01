@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/webchen/gotools/base/conf"
 	"github.com/webchen/gotools/help/str"
-	"github.com/webchen/gotools/help/tool/conf"
 
 	"github.com/go-redis/redis/v8"
 )

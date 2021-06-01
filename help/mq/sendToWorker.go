@@ -7,9 +7,9 @@ import (
 	"time"
 
 	base "github.com/webchen/gotools/base"
+	"github.com/webchen/gotools/base/conf"
 	"github.com/webchen/gotools/base/jsontool"
 	"github.com/webchen/gotools/help/logs"
-	"github.com/webchen/gotools/help/tool/conf"
 	"github.com/webchen/gotools/help/util/goqueue"
 
 	"github.com/streadway/amqp"

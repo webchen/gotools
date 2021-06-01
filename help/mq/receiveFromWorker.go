@@ -6,8 +6,8 @@ import (
 
 	"github.com/webchen/gotools/base"
 
+	"github.com/webchen/gotools/base/conf"
 	"github.com/webchen/gotools/help/logs"
-	"github.com/webchen/gotools/help/tool/conf"
 	"github.com/webchen/gotools/help/tool/nettool"
 
 	"github.com/streadway/amqp"

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	base "github.com/webchen/gotools/base"
+	"github.com/webchen/gotools/base"
 	"github.com/webchen/gotools/base/dirtool"
 	"github.com/webchen/gotools/base/jsontool"
 

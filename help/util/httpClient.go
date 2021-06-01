@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/webchen/gotools/base/conf"
 	"github.com/webchen/gotools/base/jsontool"
 	"github.com/webchen/gotools/help/logs"
 	"github.com/webchen/gotools/help/str"
-	"github.com/webchen/gotools/help/tool/conf"
 )
 
 var transport = &http.Transport{
@@ -94,7 +94,11 @@ func HTTPBaseGet(url string) interface{} {
 
 	data := make(map[string]interface{})
 	strData := HTTPGet(url)
-	logs.Info("HTTPBaseGet : %s   result : %s", url, strData)
+
+	debugBaseGet := str.Convert2U32(conf.GetConfig("system.http.debugBaseGet", 0))
+	if debugBaseGet == 1 {
+		logs.Info("HTTPBaseGet : %s   result : %s", url, strData)
+	}
 	if len(strData) == 0 {
 		logs.Warning(fmt.Sprintf("http请求 [%s] 返回空", url), "", false)
 		return data

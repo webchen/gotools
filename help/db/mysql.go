@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/webchen/gotools/base/conf"
 	"github.com/webchen/gotools/help/logs"
 	"github.com/webchen/gotools/help/str"
-	"github.com/webchen/gotools/help/tool/conf"
 
 	_ "github.com/go-sql-driver/mysql"
 )
