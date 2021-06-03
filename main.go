@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
-
-	"github.com/webchen/gotools/base/conf"
 )
 
 func main() {
-	f := conf.GetConfig("system.deployPathName", "path").(string)
-	fmt.Println(f)
+	//tl := task.NewTaskInfo("test", tt)
+	//task.TaskList = append(task.TaskList, tl)
+}
+
+func tt() {
+	fmt.Println("111111111")
 }

@@ -17,7 +17,7 @@ import (
 //var buildDir = "build" + string(os.PathSeparator)
 var buildDir = ""
 var osList = [4]string{"linux", "windows", "mac", "freebsd"}
-var fileName = "carGatewayService"
+var fileName = conf.GetConfig("system.deploy.fileName", "gotools").(string)
 
 // DoBuild 构建
 func DoBuild(osName string) {
@@ -46,7 +46,7 @@ func DoBuild(osName string) {
 			}
 		}
 	}
-	deployConf := conf.GetConfig("system.deployPathName", "public").(string)
+	deployConf := conf.GetConfig("system.deploy.fileDir", "public").(string)
 	if deployConf == "" {
 		deployConf = "public"
 	}
