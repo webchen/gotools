@@ -1,44 +1,43 @@
 package estool
 
 import (
-	"bytes"
-	"context"
-	"log"
-	"strings"
-	"time"
-
 	"github.com/webchen/gotools/base/conf"
-	"github.com/webchen/gotools/base/jsontool"
-	"github.com/webchen/gotools/help/tool/nettool"
+	"github.com/webchen/gotools/help/logs"
 
 	"github.com/elastic/go-elasticsearch/v8"
-	"github.com/elastic/go-elasticsearch/v8/esapi"
 )
 
-var es *elasticsearch.Client
+var esList = make(map[string]*elasticsearch.Client)
 
 func init() {
-	var hostEmpty []interface{}
-	host := conf.GetConfig("es.host", hostEmpty).([]interface{})
-	var hostList []string
-	for _, v := range host {
-		hostList = append(hostList, v.(string))
-	}
-	user := conf.GetConfig("es.user", "").(string)
-	password := conf.GetConfig("es.password", "").(string)
-	cfg := elasticsearch.Config{
-		Addresses: hostList,
-		Username:  user,
-		Password:  password,
-		// ...
-	}
-	var err error
-	es, err = elasticsearch.NewClient(cfg)
-	if err != nil {
-		log.Fatalf("无法初始化ES类  [%+v]", err)
+	var es *elasticsearch.Client
+	serverList := make(map[string]map[string]interface{})
+	serverList = conf.GetConfig("es", serverList).(map[string]map[string]interface{})
+
+	for k, v := range serverList {
+		host := v["host"].([]interface{})
+		var hostList []string
+		for _, v := range host {
+			hostList = append(hostList, v.(string))
+		}
+		user := v["user"].(string)
+		password := v["password"].(string)
+		cfg := elasticsearch.Config{
+			Addresses: hostList,
+			Username:  user,
+			Password:  password,
+			// ...
+		}
+		var err error
+		es, err = elasticsearch.NewClient(cfg)
+		if logs.ErrorProcess(err, "无法初始化ES") {
+			continue
+		}
+		esList[k] = es
 	}
 }
 
+/*
 // WriteLog 往ES里面写LOG
 func WriteLog(level string, message string, v ...interface{}) {
 	index := (conf.GetConfig("es.index", "gateway_pub")).(string)
@@ -68,3 +67,4 @@ func WriteLog(level string, message string, v ...interface{}) {
 		}
 	})()
 }
+*/
