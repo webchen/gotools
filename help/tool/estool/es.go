@@ -1,6 +1,8 @@
 package estool
 
 import (
+	"strings"
+
 	"github.com/webchen/gotools/base/conf"
 	"github.com/webchen/gotools/help/logs"
 
@@ -35,6 +37,17 @@ func init() {
 		}
 		esList[k] = es
 	}
+}
+
+// GetESClient 获取ES客户端
+func GetESClient(key string) *elasticsearch.Client {
+	if strings.TrimSpace(key) == "" {
+		return nil
+	}
+	if obj, exists := esList[key]; exists {
+		return obj
+	}
+	return nil
 }
 
 /*
