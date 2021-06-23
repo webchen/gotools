@@ -13,17 +13,17 @@ var esList = make(map[string]*elasticsearch.Client)
 
 func init() {
 	var es *elasticsearch.Client
-	serverList := make(map[string]map[string]interface{})
-	serverList = conf.GetConfig("es", serverList).(map[string]map[string]interface{})
-
-	for k, v := range serverList {
-		host := v["host"].([]interface{})
+	serverList := make(map[string]interface{})
+	serverList = conf.GetConfig("es", serverList).(map[string]interface{})
+	var hostEmpty []interface{}
+	for k := range serverList {
+		host := conf.GetConfig("es."+k+".host", hostEmpty).([]interface{}) //v["host"].([]interface{})
 		var hostList []string
-		for _, v := range host {
-			hostList = append(hostList, v.(string))
+		for _, vv := range host {
+			hostList = append(hostList, vv.(string))
 		}
-		user := v["user"].(string)
-		password := v["password"].(string)
+		user := conf.GetConfig("es."+k+".user", "").(string)
+		password := conf.GetConfig("es."+k+".password", "").(string)
 		cfg := elasticsearch.Config{
 			Addresses: hostList,
 			Username:  user,
@@ -37,6 +37,7 @@ func init() {
 		}
 		esList[k] = es
 	}
+
 }
 
 // GetESClient 获取ES客户端
