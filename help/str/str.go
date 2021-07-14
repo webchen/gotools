@@ -135,6 +135,24 @@ func Convert2U32(i interface{}) uint32 {
 	return num
 }
 
+// Convert2Int32 interface转int32
+func Convert2Int32(i interface{}) int32 {
+	var num int32 = 0
+	switch i.(type) {
+	case float64:
+		num = int32(i.(float64))
+	case string:
+		num = String2Int(i.(string))
+	case int64:
+		num = int32(i.(int64))
+	case int:
+		num = int32(i.(int))
+	default:
+		break
+	}
+	return num
+}
+
 // Md5 32位MD5
 func Md5(strs string) string {
 	w := md5.New()
