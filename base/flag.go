@@ -5,8 +5,9 @@ import (
 	"strings"
 )
 
-var builded = false
+var checked = false
 var buildOs = ""
+var daemon = 1
 
 // IsBuild 是否编译
 func IsBuild() bool {
@@ -15,11 +16,28 @@ func IsBuild() bool {
 
 // BuildOsName 要编译的系统名称
 func BuildOsName() string {
-	if builded {
+	if checked {
 		return buildOs
 	}
-	flag.StringVar(&buildOs, "buildOs", "", "1) linux (default) \n 2) windows \n 3) mac \n 4) freebsd")
-	flag.Parse()
-	builded = true
+	checkFlags()
 	return buildOs
+}
+
+func IsDaemon() bool {
+	if checked {
+		return daemon == 1
+	}
+	checkFlags()
+	return daemon == 1
+}
+
+func checkFlags() {
+	if checked {
+		return
+	}
+	flag.StringVar(&buildOs, "buildOs", "", "1) linux (default) \n 2) windows \n 3) mac \n 4) freebsd")
+	flag.IntVar(&daemon, "daemon", 0, "1: daemon")
+
+	checked = true
+	flag.Parse()
 }

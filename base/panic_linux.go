@@ -20,9 +20,10 @@ func RewriteStderrFile() error {
 	if runtime.GOOS == "windows" {
 		return nil
 	}
-	fmt.Println("change stdout")
 
 	stdErrFile := "/data/syspanic.log"
+
+	fmt.Println("change stdout to : " + stdErrFile)
 
 	file, err := os.OpenFile(stdErrFile, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
