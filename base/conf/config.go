@@ -1,7 +1,10 @@
 package conf
 
 import (
+	"fmt"
+
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -10,7 +13,6 @@ import (
 	"github.com/webchen/gotools/base"
 	"github.com/webchen/gotools/base/dirtool"
 	"github.com/webchen/gotools/base/jsontool"
-
 	"github.com/zouyx/agollo/v4"
 	apolloConfig "github.com/zouyx/agollo/v4/env/config"
 )
@@ -18,11 +20,27 @@ import (
 // 全局配置变量
 var config = make(map[string]map[string]interface{})
 
-var apolloData map[string]string
+var baseConfigData map[string]map[string]interface{}
 
 func init() {
-	loadApolloConfig()
-	initApollo()
+	loadBaseConfig()
+	if !base.IsBuild() {
+		if checkBaseConfigData() {
+			if baseConfigData["configType"]["name"] == nil {
+				log.Println("consul或apollo配置不存在，不更新配置")
+			} else {
+				configType := strings.TrimSpace(strings.ToLower(baseConfigData["configType"]["name"].(string)))
+				if configType == "apollo" {
+					initApollo()
+				}
+				if configType == "consul" {
+					initConsulClient()
+					initConsul()
+				}
+			}
+		}
+	}
+
 	initLocal()
 
 	//os.Exit(1)
@@ -42,17 +60,49 @@ func initLocal() {
 	}
 }
 
-func loadApolloConfig() {
-	f := dirtool.GetConfigPath() + "apollo.json"
+func checkBaseConfigData() bool {
+	if baseConfigData == nil {
+		fmt.Println("baseConfig加载失败，不更新配置和注册")
+		return false
+	}
+	return true
+}
+
+func loadBaseConfig() {
+	if baseConfigData != nil {
+		return
+	}
+	f := dirtool.GetConfigPath() + "baseConfig.json"
 	exists, _ := dirtool.PathExist(f)
 	if !exists {
 		return
 	}
-	jsontool.LoadFromFile(f, &apolloData)
+	jsontool.LoadFromFile(f, &baseConfigData)
+}
+
+func initConsul() {
+	prefix := baseConfigData["consul"]["folder"].(string)
+	for _, v := range baseConfigData["consul"]["files"].([]interface{}) {
+		if !strings.HasSuffix(prefix, "/") {
+			prefix += "/"
+		}
+		r, _, err := consulClient.KV().Get(prefix+v.(string), nil)
+		if err != nil {
+			log.Println("config ", v, " read from consul error...")
+			continue
+		}
+		if r == nil {
+			log.Println("获取配置[" + v.(string) + "]失败，不更新")
+			continue
+		}
+		fileName := dirtool.GetConfigPath() + v.(string) + ".json"
+		ioutil.WriteFile(fileName, r.Value, 0x666)
+		fmt.Println("write config file : ", fileName)
+	}
 }
 
 func initApollo() {
-	if apolloData == nil {
+	if baseConfigData == nil {
 		return
 	}
 	defer func() {
@@ -62,11 +112,11 @@ func initApollo() {
 	}()
 
 	c := &apolloConfig.AppConfig{
-		AppID:         apolloData["appID"],
-		Cluster:       apolloData["cluster"],
-		IP:            apolloData["host"],
-		NamespaceName: apolloData["namespace"],
-		Secret:        apolloData["secret"],
+		AppID:         baseConfigData["appolo"]["appID"].(string),
+		Cluster:       baseConfigData["appolo"]["cluster"].(string),
+		IP:            baseConfigData["apollo"]["host"].(string),
+		NamespaceName: baseConfigData["apollo"]["namespace"].(string),
+		Secret:        baseConfigData["apollo"]["secret"].(string),
 	}
 	//	agollo.SetLogger(&log.DefaultLogger{})
 	client, _ := agollo.StartWithConfig(func() (*apolloConfig.AppConfig, error) {
