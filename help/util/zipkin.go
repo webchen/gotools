@@ -22,13 +22,17 @@ import (
 // QueryWithZipKin 加上ZIPKIN链接监控
 func QueryWithZipKin(method string, url string, jsonMap map[string]interface{}) string {
 	tracer := GetTracer()
+	if tracer == nil {
+		logs.Show("enable zip, but config is empty, doHTTP2 instead...")
+		return doHTTP2(method, url, jsonMap)
+	}
 
 	serverMiddleware := zipkinhttp.NewServerMiddleware(
 		tracer, zipkinhttp.TagResponseSize(true),
 	)
 
 	client, err := zipkinhttp.NewClient(tracer, zipkinhttp.ClientTrace(true))
-	client.Timeout = 10 * time.Second
+	client.Timeout = 1 * time.Second
 	client.Transport = transport
 	if err != nil {
 		logs.ErrorProcess(err, "unable to create client")
@@ -68,11 +72,15 @@ func QueryWithZipKin(method string, url string, jsonMap map[string]interface{}) 
 
 // GetTracer 获取tracer对象
 func GetTracer() *zipkin.Tracer {
-	endPointURL := conf.GetConfig("conf.zipkinEndPoint", "").(string)
+	endPointURL := conf.GetConfig("zipkin.endPoint", "").(string)
+	if endPointURL == "" {
+		return nil
+	}
+
 	reporter := httpreporter.NewReporter(endPointURL)
 
 	// set-up the local endpoint for our service
-	endpoint, _ := zipkin.NewEndpoint("go-gateway", nettool.GetLocalFirstIPStr())
+	endpoint, _ := zipkin.NewEndpoint(conf.GetConfig("zipkin.serviceName", "goZipkin").(string), nettool.GetLocalFirstIPStr())
 
 	// set-up our sampling strategy
 	sampler := zipkin.NewModuloSampler(1)

@@ -169,3 +169,10 @@ func GetConfig(key string, def interface{}) interface{} {
 	}
 	return confDeep
 }
+
+func GetEnv(key, defaultValue string) string {
+	if v, ex := os.LookupEnv(key); ex {
+		return v
+	}
+	return defaultValue
+}

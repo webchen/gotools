@@ -25,7 +25,7 @@ var transport = &http.Transport{
 	TLSClientConfig:     &tls.Config{InsecureSkipVerify: true},
 }
 
-var httpClient = http.Client{Timeout: 10 * time.Second, Transport: transport}
+var httpClient = http.Client{Timeout: 1 * time.Second, Transport: transport}
 
 // 重试次数
 var times int = 2
@@ -44,7 +44,7 @@ func HTTPGet(url string) string {
 }
 
 func doHTTP(method string, url string, jsonMap map[string]interface{}) string {
-	enableZipkin := conf.GetConfig("conf.enableZipkin", false).(bool)
+	enableZipkin := conf.GetConfig("zipkin.enable", false).(bool)
 	if enableZipkin {
 		return QueryWithZipKin(method, url, jsonMap)
 	}
