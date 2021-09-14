@@ -3,6 +3,7 @@ package mq
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -32,9 +33,10 @@ var reConnectLock = base.NewTryMutex()
 
 // SendFormat 发送数据的格式
 type SendFormat struct {
-	Timestamp int64  `json:"timestamp"`
-	T         uint8  `json:"t"`
-	Trace     string `json:"trace"`
+	//	Timestamp int64  `json:"timestamp"`
+	T     uint8  `json:"t"`
+	Trace string `json:"trace"`
+	Data  string `json:"data"`
 }
 
 // ChannelObject channel对象
@@ -75,11 +77,11 @@ func reConnect() {
 func initConnection(start int, max int) {
 	for j := start; j <= max; j++ {
 		conn, err := amqp.Dial(connWorkerStr)
-		conn.Properties["ConnectionName"] = sendWorkerQueueName
-		conn.Properties["connection_name"] = sendWorkerQueueName
 		if logs.ErrorProcess(err, "无法创建MQ连接") {
 			continue
 		}
+		conn.Properties["ConnectionName"] = sendWorkerQueueName
+		conn.Properties["connection_name"] = sendWorkerQueueName
 		connSendList.Store(j, conn)
 	}
 }
@@ -164,16 +166,19 @@ func getChannle() *ChannelObject {
 	return obj
 }
 
-// SendData2Worker 发消息给MQ
-func SendData2Worker(data *SendFormat) {
+// 实际发送的函数，解耦内容和其他附加参数（重试等）
+func send(data *SendFormat) {
+	if data.T > 3 {
+		return
+	}
+
 	randm := strconv.FormatInt(time.Now().UnixNano(), 10)
-	data.T = 1
 	var err error
 	obj := getChannle()
 	if obj == nil {
 		time.Sleep(time.Millisecond * 1000)
 		reConnect()
-		SendData2Worker(data)
+		send(data)
 		return
 	}
 	defer func() {
@@ -191,14 +196,14 @@ func SendData2Worker(data *SendFormat) {
 	//	fmt.Printf("get mq obj [%+v]\n", ch)
 	if logs.ErrorProcess(err, fmt.Sprintf("Failed to declare a queue. MessageID : [%s]", randm)) {
 		time.Sleep(time.Millisecond * 200)
-		SendData2Worker(data)
+		send(data)
 		return
 	}
-	body := jsontool.MarshalToString(data)
+	body := jsontool.MarshalToString(data.Data)
 	err = ch.QueueBind(sendWorkerQueueName, sendWorkerKey, sendWorkerExchangeName, true, nil)
 	if logs.ErrorProcess(err, fmt.Sprintf("绑定Queue失败， MessageID : [%s]", randm)) {
 		time.Sleep(time.Millisecond * 200)
-		SendData2Worker(data)
+		send(data)
 		return
 	}
 	//	fmt.Printf("bind mq err: [%+v]\n", err)
@@ -212,17 +217,30 @@ func SendData2Worker(data *SendFormat) {
 			ContentType:  "application/json",
 			Body:         []byte(body),
 			MessageId:    randm,
+			Timestamp:    time.Now(),
 		})
 
-	if logs.ErrorProcess(err, "Failed SendData2Worker") {
+	if logs.ErrorProcess(err, "Failed Mq Send") {
 		if data.T > 3 {
 			logs.Warning("该消息重发3次失败", data, false)
 			return
 		}
 		time.Sleep(time.Second)
 		data.T++
-		base.Go(SendData2Worker, data)
+		base.Go(send, data)
 		return
 	}
 	logs.Message(fmt.Sprintf("sendDataToWorker MessageID : [%s]", randm), data, false)
+
+}
+
+// SendData2Worker 发消息给MQ
+func SendData2Worker(data string) {
+	if strings.TrimSpace(data) == "" {
+		return
+	}
+	d := &SendFormat{}
+	d.T = 1
+	d.Data = data
+	send(d)
 }
