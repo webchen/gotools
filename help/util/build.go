@@ -99,7 +99,7 @@ func getCmd(osName string, fileName string, files string) string {
 SET CGO_ENABLED=0
 SET GOOS=%s
 SET GOARCH=amd64
-go build -i -o %s %s
+go build -o %s %s
 `, osName, fileName, files)
 	return cmd
 }

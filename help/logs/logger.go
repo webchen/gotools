@@ -54,8 +54,8 @@ func newCmdLogger(level string) *log.Logger {
 func Debug(format string, v ...interface{}) {
 	s := fmt.Sprintf(format, v...)
 
-	fileLogger.SetPrefix("[Debug]")
-	cmdLogger.SetPrefix("[Debug]")
+	fileLogger.SetPrefix("[Debug] ")
+	cmdLogger.SetPrefix("[Debug] ")
 
 	if fileLevel == 0 {
 		fileLogger.Println(s)
@@ -69,8 +69,8 @@ func Debug(format string, v ...interface{}) {
 // Info 日志
 func Info(format string, v ...interface{}) {
 	s := fmt.Sprintf(format, v...)
-	fileLogger.SetPrefix("[info]")
-	cmdLogger.SetPrefix("[info]")
+	fileLogger.SetPrefix("[info] ")
+	cmdLogger.SetPrefix("[info] ")
 
 	if fileLevel <= 1 {
 		fileLogger.Println(s)
@@ -105,12 +105,14 @@ func Warning(message string, data interface{}, withTrace bool) {
 
 	s := jsontool.MarshalToString(info)
 	if fileLevel <= 2 {
-		fileLogger.SetPrefix("")
+		fileLogger.SetPrefix("[Warning] ")
 		fileLogger.SetFlags(0)
 		fileLogger.Println(s)
 	}
 
 	if cmdLevel <= 2 {
+		cmdLogger.SetPrefix("[Warning] ")
+		cmdLogger.SetFlags(0)
 		cmdLogger.Println(s)
 	}
 }
@@ -141,7 +143,7 @@ func Error(message string, data interface{}) {
 	}
 
 	if cmdLevel <= 3 {
-		cmdLogger.SetPrefix("Error")
+		cmdLogger.SetPrefix("[Error] ")
 		cmdLogger.Println(s)
 	}
 }
@@ -222,7 +224,7 @@ func MessageClient(message string, data interface{}, withTrace bool) {
 func Critial(format string, v ...interface{}) {
 	s := fmt.Sprintf(format, v...)
 	if fileLevel <= 4 {
-		fileLogger.SetPrefix("[CRITIAL]")
+		fileLogger.SetPrefix("[CRITIAL] ")
 		fileLogger.Println(s)
 	}
 
@@ -237,7 +239,7 @@ func Critial(format string, v ...interface{}) {
 func Exited(format string, v ...interface{}) {
 	s := fmt.Sprintf(format, v...)
 	if fileLevel <= 9 {
-		fileLogger.SetPrefix("[EXIT]")
+		fileLogger.SetPrefix("[EXIT] ")
 		fileLogger.Println(s)
 	}
 
@@ -281,14 +283,14 @@ func CritialProcess(err error, msg string) bool {
 // Query 请求第三方的日志
 func Query(format string, v ...interface{}) {
 	if fileLevel <= 2 {
-		fileLogger.SetPrefix("[QUERY]")
+		fileLogger.SetPrefix("[QUERY] ")
 		fileLogger.Println(fmt.Sprintf(format, v...))
 	}
 }
 
 // Show 打印一定会显示的信息（用于系统层面）
 func Show(format string, v ...interface{}) {
-	cmdLogger.SetPrefix("[show]")
+	cmdLogger.SetPrefix("[show] ")
 	cmdLogger.Println(fmt.Sprintf(format, v...))
 	//log.Info(fmt.Sprintf(format, v...))
 }
@@ -320,6 +322,6 @@ func WebAccess(format string, v ...interface{}) {
 	if strings.Contains(data, "kube-probe/") || strings.Contains(data, "SLBHealthCheck") {
 		return
 	}
-	fileLogger.SetPrefix("[ACCESS]")
+	fileLogger.SetPrefix("[ACCESS] ")
 	fileLogger.Println(data)
 }
