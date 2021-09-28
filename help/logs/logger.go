@@ -15,8 +15,8 @@ import (
 	//	log "github.com/sirupsen/logrus"
 )
 
-var maxStack = 20
-var separator = "---------------------------------------" + fmt.Sprintln()
+//var maxStack = 20
+//var separator = "---------------------------------------" + fmt.Sprintln()
 
 // debug -> 0 info/readmq -> 1 warning/query -> 2 error/message -> 3 critial -> 4 exit -> 9
 
@@ -137,7 +137,7 @@ func Error(message string, data interface{}) {
 	}
 	s := jsontool.MarshalToString(info)
 	if fileLevel <= 3 {
-		fileLogger.SetPrefix("")
+		fileLogger.SetPrefix("[Error] ")
 		fileLogger.SetFlags(0)
 		fileLogger.Println(s)
 	}
@@ -174,12 +174,13 @@ func Message(message string, data interface{}, withTrace bool) {
 	s := jsontool.MarshalToString(info)
 
 	if fileLevel <= 4 {
-		fileLogger.SetPrefix("")
+		fileLogger.SetPrefix("[Message] ")
 		fileLogger.SetFlags(0)
 		fileLogger.Println(s)
 	}
 
 	if cmdLevel <= 4 {
+		cmdLogger.SetPrefix("[Message] ")
 		cmdLogger.Println(s)
 	}
 }
@@ -210,12 +211,13 @@ func MessageClient(message string, data interface{}, withTrace bool) {
 	s := jsontool.MarshalToString(info)
 
 	if fileLevel <= 4 {
-		fileLogger.SetPrefix("")
+		fileLogger.SetPrefix("[MessageClient] ")
 		fileLogger.SetFlags(0)
 		fileLogger.Println(s)
 	}
 
 	if cmdLevel <= 4 {
+		cmdLogger.SetPrefix("[MessageClient] ")
 		cmdLogger.Println(s)
 	}
 }
@@ -229,6 +231,7 @@ func Critial(format string, v ...interface{}) {
 	}
 
 	if cmdLevel <= 4 {
+		cmdLogger.SetPrefix("[Critial] ")
 		cmdLogger.Println(s)
 	}
 	//emailtool.SendAlertEmail(s)
