@@ -33,7 +33,8 @@ func QueryWithZipKin(method string, url string, jsonMap map[string]interface{}) 
 
 	client, err := zipkinhttp.NewClient(tracer, zipkinhttp.ClientTrace(true))
 	client.Timeout = 1 * time.Second
-	client.Transport = transport
+	// 直接走官方默认的，否则会无法上报数据
+	//client.Transport = transport
 	if err != nil {
 		logs.ErrorProcess(err, "unable to create client")
 		return ""
