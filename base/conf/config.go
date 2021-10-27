@@ -27,7 +27,7 @@ func init() {
 	if !base.IsBuild() {
 		if checkBaseConfigData() {
 			if baseConfigData["configType"]["name"] == nil {
-				log.Println("consul或apollo配置不存在，不更新配置")
+				//log.Println("consul或apollo配置不存在，不更新配置")
 			} else {
 				configType := strings.TrimSpace(strings.ToLower(baseConfigData["configType"]["name"].(string)))
 				if configType == "apollo" {
@@ -61,11 +61,7 @@ func initLocal() {
 }
 
 func checkBaseConfigData() bool {
-	if baseConfigData == nil {
-		fmt.Println("baseConfig加载失败，不更新配置和注册")
-		return false
-	}
-	return true
+	return baseConfigData != nil
 }
 
 func loadBaseConfig() {
@@ -81,6 +77,9 @@ func loadBaseConfig() {
 }
 
 func initConsul() {
+	if baseConfigData["consul"] == nil {
+		return
+	}
 	prefix := baseConfigData["consul"]["folder"].(string)
 	for _, v := range baseConfigData["consul"]["files"].([]interface{}) {
 		if !strings.HasSuffix(prefix, "/") {

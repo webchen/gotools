@@ -19,11 +19,14 @@ func init() {
 }
 
 func checkConsul() bool {
-	if consulClient == nil {
-		log.Println("初始化consul失败，不更新配置和注册")
-		return false
-	}
-	return true
+	/*
+		if consulClient == nil {
+			log.Println("初始化consul失败，不更新配置和注册")
+			return false
+		}
+		return true
+	*/
+	return consulClient != nil
 }
 
 func initConsulClient() {
@@ -31,6 +34,9 @@ func initConsulClient() {
 		return
 	}
 	var err error
+	if baseConfigData["consul"] == nil {
+		return
+	}
 	consulConfig := consulapi.DefaultConfig()
 	consulConfig.Token = baseConfigData["consul"]["token"].(string)
 	rand.Seed(time.Now().Unix())
