@@ -41,7 +41,7 @@ func checkFlags() {
 		return
 	}
 	flag.StringVar(&buildOs, "buildOs", "", "1) linux (default) \n 2) windows \n 3) mac \n 4) freebsd")
-	flag.IntVar(&buildWithConfig, "build with config", 1, "default : 1. if no cover config, 0 is ok")
+	flag.IntVar(&buildWithConfig, "buildWithConfig", 1, "default : 1. if no cover config, 0 is ok")
 	flag.IntVar(&daemon, "daemon", 0, "1: daemon")
 
 	checked = true
