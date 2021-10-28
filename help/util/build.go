@@ -55,14 +55,16 @@ func DoBuild(osName string) {
 	deployConfigPath := deployPath + "config" + string(os.PathSeparator)
 	dirtool.MustCreateDir(deployConfigPath)
 
-	confPath := dirtool.GetConfigPath()
-	confList, _ := ioutil.ReadDir(confPath)
-	for _, f := range confList {
-		fsBytes, _ := ioutil.ReadFile(confPath + f.Name())
-		info := string(fsBytes)
-		err := ioutil.WriteFile(deployConfigPath+f.Name(), []byte(info), 0777)
-		if err != nil {
-			panic(err)
+	if base.BuildWithConfig() {
+		confPath := dirtool.GetConfigPath()
+		confList, _ := ioutil.ReadDir(confPath)
+		for _, f := range confList {
+			fsBytes, _ := ioutil.ReadFile(confPath + f.Name())
+			info := string(fsBytes)
+			err := ioutil.WriteFile(deployConfigPath+f.Name(), []byte(info), 0777)
+			if err != nil {
+				panic(err)
+			}
 		}
 	}
 

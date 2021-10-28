@@ -2,6 +2,7 @@ package conf
 
 import (
 	"fmt"
+	"time"
 
 	"io/ioutil"
 	"log"
@@ -21,6 +22,8 @@ import (
 var config = make(map[string]map[string]interface{})
 
 var baseConfigData map[string]map[string]interface{}
+
+var loadTime time.Time = time.Now()
 
 func init() {
 	loadBaseConfig()
@@ -58,6 +61,7 @@ func initLocal() {
 			config[fileName] = conf
 		}
 	}
+	loadTime = time.Now()
 }
 
 func checkBaseConfigData() bool {
@@ -174,4 +178,8 @@ func GetEnv(key, defaultValue string) string {
 		return v
 	}
 	return defaultValue
+}
+
+func GetLoadTime() time.Time {
+	return loadTime
 }
