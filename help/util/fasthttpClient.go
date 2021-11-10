@@ -3,6 +3,7 @@ package util
 import (
 	"time"
 
+	"github.com/webchen/gotools/base/conf"
 	"github.com/webchen/gotools/base/jsontool"
 	"github.com/webchen/gotools/help/logs"
 
@@ -33,8 +34,8 @@ func doHTTP2(method string, url string, jsonMap map[string]interface{}) string {
 		req.SetBody(requestBody)
 	}
 	req.SetRequestURI(url)
-
-	err := fasthttpClient.DoTimeout(req, resp, time.Second)
+	t, _ := time.ParseDuration(conf.GetConfig("system.http.queryTimeOut", "3s").(string))
+	err := fasthttpClient.DoTimeout(req, resp, time.Second*t)
 	if err != nil {
 		logData := make(map[string]string)
 		logData["url"] = url
