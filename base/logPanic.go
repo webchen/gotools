@@ -83,11 +83,27 @@ echo '' > %s
 // LogDir 日志文件夹
 func LogDir() string {
 	var dirPath = ""
-	if IsWIN() {
+	/*
+		if IsWIN() {
+			dirPath, _ = os.Getwd()
+			dirPath += string(os.PathSeparator) + "log" + string(os.PathSeparator)
+		} else {
+			dirPath = "/data/"
+		}
+	*/
+	cfg := make(map[string]interface{})
+	jsontool.LoadFromFile(dirtool.GetBasePath()+"config"+string(os.PathSeparator)+"system.json", &cfg)
+
+	if cfg != nil && cfg["logdir"] != nil {
+		data, ok := cfg["logdir"].(string)
+		if ok {
+			dirPath = data
+		}
+	}
+
+	if dirPath == "" {
 		dirPath, _ = os.Getwd()
 		dirPath += string(os.PathSeparator) + "log" + string(os.PathSeparator)
-	} else {
-		dirPath = "/data/"
 	}
 	dirtool.MustCreateDir(dirPath)
 	return dirPath
