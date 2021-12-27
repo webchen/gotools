@@ -1,0 +1,8 @@
+{
+    "main": {
+        "connectionString": "root:password@xujiu@tcp(127.0.0.1)/wz_main?charset=utf8mb4&parseTime=true&loc=Local&multiStatements=true",
+        "maxOpenConns": 10,
+        "maxIdleConns": 3,
+        "connMaxLifetime": 120
+    }
+}

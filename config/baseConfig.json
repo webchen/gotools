@@ -1,0 +1,37 @@
+{
+    "configType": {
+        "name": "consul"
+    },
+    "consul": {
+        "server": [
+            "consul.default.svc.cluster.local:8500"
+        ],
+        "folder": "gotool/",
+        "files": [
+            "api"
+        ],
+        "token": "token",
+        "register": {
+            "open": "1",
+            "id": "gotool",
+            "name": "gotool",
+            "port": "60000",
+            "tags": ["gotool"]
+        },
+        "check": {
+            "open": "1",
+            "port": "60001",
+            "timeout": "1s",
+            "interval": "3s",
+            "deregisterCriticalServiceAfter": "30s"
+        }
+    },
+    "apollo": {
+        "host": "http://127.0.0.1:9080",
+        "timeout": 6,
+        "appID": "gotool",
+        "namespace": "application",
+        "cluster": "default",
+        "secret": ""
+    }
+}

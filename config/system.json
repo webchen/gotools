@@ -1,0 +1,16 @@
+{
+    "deploy": {
+        "fileName": "gotools",
+        "fileDir": "publish"
+    },
+    "nohup": {
+        "logFile": "out.log"
+    },
+    "http": {
+        "debugBaseGet": 0,
+        "queryTimeOut": "3s"
+    },
+    "logdir": {
+        
+    }
+}
