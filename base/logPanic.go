@@ -82,12 +82,14 @@ echo '' > %s
 
 // LogDir 日志文件夹
 func LogDir() string {
-	var dirPath = ""
-	if IsWIN() {
-		dirPath, _ = os.Getwd()
-		dirPath += string(os.PathSeparator) + "log" + string(os.PathSeparator)
-	} else {
-		dirPath = "/data/"
+	var dirPath = os.Getenv("LOG_DIR")
+	if dirPath == "" {
+		if IsWIN() {
+			dirPath, _ = os.Getwd()
+			dirPath += string(os.PathSeparator) + "log" + string(os.PathSeparator)
+		} else {
+			dirPath = "/data/"
+		}
 	}
 	dirtool.MustCreateDir(dirPath)
 	return dirPath
