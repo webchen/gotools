@@ -2,7 +2,6 @@ package conf
 
 import (
 	"fmt"
-	"sync"
 	"time"
 
 	"io/ioutil"
@@ -26,7 +25,7 @@ var baseConfigData map[string]map[string]interface{}
 
 var loadTime time.Time = time.Now()
 
-var configLock sync.RWMutex
+//var configLock sync.RWMutex
 
 func init() {
 	toInit()
@@ -46,8 +45,8 @@ func init() {
 }
 
 func toInit() {
-	configLock.Lock()
-	defer configLock.Unlock()
+	//	configLock.Lock()
+	//	defer configLock.Unlock()
 
 	loadBaseConfig()
 	if !base.IsBuild() {
@@ -162,8 +161,8 @@ func initApollo() {
 
 // GetConfig 获取JSON的配置，key支持"."操作，如：GetConfig("conf.runtime")，表示获取conf.json文件里面，runtime的值
 func GetConfig(key string, def interface{}) interface{} {
-	configLock.RLock()
-	defer configLock.RUnlock()
+	//	configLock.RLock()
+	//	defer configLock.RUnlock()
 
 	defer func() {
 		recover()
