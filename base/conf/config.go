@@ -30,18 +30,19 @@ var configLock sync.RWMutex
 
 func init() {
 	toInit()
+	/*
+		// 10分钟更新一次配置
+		base.Go(func() {
+			ticker := time.NewTicker(time.Minute * 10)
+			for {
+				<-ticker.C
+				fmt.Println("auto load config ...")
+				toInit()
+			}
+		})
 
-	// 10分钟更新一次配置
-	base.Go(func() {
-		ticker := time.NewTicker(time.Minute * 10)
-		for {
-			<-ticker.C
-			fmt.Println("auto load config ...")
-			toInit()
-		}
-	})
-
-	//os.Exit(1)
+		//os.Exit(1)
+	*/
 }
 
 func toInit() {
