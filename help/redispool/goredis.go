@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/webchen/gotools/base"
 	"github.com/webchen/gotools/base/conf"
 	"github.com/webchen/gotools/help/logs"
 	"github.com/webchen/gotools/help/str"
@@ -19,8 +20,11 @@ var Ctx = context.Background()
 var clientList = make(map[string]*redis.Client)
 
 func init() {
-
-	redisList := conf.GetConfig("redis", nil).(map[string]interface{})
+	if base.IsBuild() {
+		return
+	}
+	var redisList map[string]interface{}
+	redisList = conf.GetConfig("redis", redisList).(map[string]interface{})
 	if len(redisList) == 0 {
 		logs.Warning("redis config is nil", nil, false)
 		return

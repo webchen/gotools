@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/webchen/gotools/base"
 	"github.com/webchen/gotools/base/conf"
 	"github.com/webchen/gotools/help/logs"
 	"github.com/webchen/gotools/help/str"
@@ -16,6 +17,9 @@ import (
 var mysqlList = make(map[string]*sql.DB)
 
 func init() {
+	if base.IsBuild() {
+		return
+	}
 	list := make(map[string]interface{})
 	list = (conf.GetConfig("mysql", list)).(map[string]interface{})
 	for k, v := range list {
