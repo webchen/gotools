@@ -2,6 +2,7 @@ package conf
 
 import (
 	"fmt"
+	"sync"
 	"time"
 
 	"io/ioutil"
@@ -25,7 +26,28 @@ var baseConfigData map[string]map[string]interface{}
 
 var loadTime time.Time = time.Now()
 
+var configLock sync.RWMutex
+
 func init() {
+	toInit()
+
+	// 10分钟更新一次配置
+	base.Go(func() {
+		ticker := time.NewTicker(time.Minute * 10)
+		for {
+			<-ticker.C
+			fmt.Println("auto load config ...")
+			toInit()
+		}
+	})
+
+	//os.Exit(1)
+}
+
+func toInit() {
+	configLock.Lock()
+	defer configLock.Unlock()
+
 	loadBaseConfig()
 	if !base.IsBuild() {
 		if checkBaseConfigData() {
@@ -45,8 +67,6 @@ func init() {
 	}
 
 	initLocal()
-
-	//os.Exit(1)
 }
 
 func initLocal() {
@@ -75,6 +95,7 @@ func loadBaseConfig() {
 	f := dirtool.GetConfigPath(base.IsBuild()) + "baseConfig.json"
 	exists, _ := dirtool.PathExist(f)
 	if !exists {
+		fmt.Println("loadBaseConfig error, baseConfig.json not exists")
 		return
 	}
 	jsontool.LoadFromFile(f, &baseConfigData)
@@ -140,6 +161,9 @@ func initApollo() {
 
 // GetConfig 获取JSON的配置，key支持"."操作，如：GetConfig("conf.runtime")，表示获取conf.json文件里面，runtime的值
 func GetConfig(key string, def interface{}) interface{} {
+	configLock.RLock()
+	defer configLock.RUnlock()
+
 	defer func() {
 		recover()
 	}()
