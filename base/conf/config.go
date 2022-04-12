@@ -50,7 +50,7 @@ func init() {
 }
 
 func initLocal() {
-	dir := dirtool.GetConfigPath()
+	dir := dirtool.GetConfigPath(base.IsBuild())
 	fileList, _ := filepath.Glob(filepath.Join(dir, "*"))
 	for j := range fileList {
 		ext := path.Ext(fileList[j])
@@ -72,7 +72,7 @@ func loadBaseConfig() {
 	if baseConfigData != nil {
 		return
 	}
-	f := dirtool.GetConfigPath() + "baseConfig.json"
+	f := dirtool.GetConfigPath(base.IsBuild()) + "baseConfig.json"
 	exists, _ := dirtool.PathExist(f)
 	if !exists {
 		return
@@ -98,7 +98,7 @@ func initConsul() {
 			log.Println("获取配置[" + v.(string) + "]失败，不更新")
 			continue
 		}
-		fileName := dirtool.GetConfigPath() + v.(string) + ".json"
+		fileName := dirtool.GetConfigPath(base.IsBuild()) + v.(string) + ".json"
 		ioutil.WriteFile(fileName, r.Value, 0x666)
 		fmt.Println("write config file : ", fileName)
 	}
@@ -128,7 +128,7 @@ func initApollo() {
 
 	cache := client.GetConfigCache(c.NamespaceName)
 	cache.Range(func(key, value interface{}) bool {
-		configFilePath := dirtool.GetConfigPath() + key.(string) + ".json"
+		configFilePath := dirtool.GetConfigPath(base.IsBuild()) + key.(string) + ".json"
 		ioutil.WriteFile(configFilePath, []byte(value.(string)), 0777)
 		//fmt.Printf("key: %+v   val:%+v\n", key, value)
 		return true

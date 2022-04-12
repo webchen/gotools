@@ -30,6 +30,12 @@ func MustCreateDir(path string) {
 	}
 }
 
+// GetCWDPath ，获取项目CWD目录，带 "/"
+func GetCWDPath() string {
+	pwd, _ := os.Getwd()
+	return pwd + string(os.PathSeparator)
+}
+
 // GetBasePath ，获取项目的根目录，带 "/"
 func GetBasePath() string {
 	ex, err := os.Executable()
@@ -45,6 +51,9 @@ func GetParentDirectory(dirctory string) string {
 }
 
 // GetConfigPath ，获取项目的配置目录
-func GetConfigPath() string {
+func GetConfigPath(isBuild bool) string {
+	if isBuild {
+		return GetCWDPath() + "config" + string(os.PathSeparator)
+	}
 	return GetBasePath() + "config" + string(os.PathSeparator)
 }
