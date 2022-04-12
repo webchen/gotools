@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/webchen/gotools/base/conf"
+	"github.com/webchen/gotools/help/logs"
 	"github.com/webchen/gotools/help/str"
 
 	"github.com/go-redis/redis/v8"
@@ -20,6 +21,10 @@ var clientList = make(map[string]*redis.Client)
 func init() {
 
 	redisList := conf.GetConfig("redis", nil).(map[string]interface{})
+	if len(redisList) == 0 {
+		logs.Warning("redis config is nil", nil, false)
+		return
+	}
 
 	for k, v := range redisList {
 		vv := v.(map[string]interface{})

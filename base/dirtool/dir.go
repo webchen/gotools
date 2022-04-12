@@ -3,6 +3,7 @@ package dirtool
 import (
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -31,8 +32,11 @@ func MustCreateDir(path string) {
 
 // GetBasePath ，获取项目的根目录，带 "/"
 func GetBasePath() string {
-	pwd, _ := os.Getwd()
-	return pwd + string(os.PathSeparator)
+	ex, err := os.Executable()
+	if err != nil {
+		panic("getBasePath error --> " + err.Error())
+	}
+	return filepath.Dir(ex) + string(os.PathSeparator)
 }
 
 // GetParentDirectory 获取上层目录
