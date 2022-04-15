@@ -1,6 +1,7 @@
 package dirtool
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -17,6 +18,14 @@ func PathExist(path string) (bool, error) {
 		return false, nil
 	}
 	return false, err
+}
+
+func PathIsExists(path string) bool {
+	b, err := PathExist(path)
+	if err != nil {
+		return false
+	}
+	return b
 }
 
 // MustCreateDir , 创建文件夹，不返回错误
@@ -52,8 +61,13 @@ func GetParentDirectory(dirctory string) string {
 
 // GetConfigPath ，获取项目的配置目录
 func GetConfigPath(isBuild bool) string {
+	path := GetBasePath() + "config" + string(os.PathSeparator)
 	if isBuild {
 		return GetCWDPath() + "config" + string(os.PathSeparator)
 	}
-	return GetBasePath() + "config" + string(os.PathSeparator)
+	if !PathIsExists(path) {
+		path = GetCWDPath() + "config" + string(os.PathSeparator)
+	}
+	fmt.Println("config path : ", path)
+	return path
 }
