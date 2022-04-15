@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+var configPath = ""
+
 // PathExist ， 判断文件是否存在
 func PathExist(path string) (bool, error) {
 	_, err := os.Stat(path)
@@ -61,13 +63,17 @@ func GetParentDirectory(dirctory string) string {
 
 // GetConfigPath ，获取项目的配置目录
 func GetConfigPath(isBuild bool) string {
-	path := GetBasePath() + "config" + string(os.PathSeparator)
+	if configPath != "" {
+		return configPath
+	}
+
+	configPath = GetBasePath() + "config" + string(os.PathSeparator)
 	if isBuild {
 		return GetCWDPath() + "config" + string(os.PathSeparator)
 	}
-	if !PathIsExists(path) {
-		path = GetCWDPath() + "config" + string(os.PathSeparator)
+	if !PathIsExists(configPath) {
+		configPath = GetCWDPath() + "config" + string(os.PathSeparator)
 	}
-	fmt.Println("config path : ", path)
-	return path
+	fmt.Println("config path : ", configPath)
+	return configPath
 }
