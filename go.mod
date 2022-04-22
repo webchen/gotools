@@ -8,7 +8,7 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/gorilla/mux v1.8.0
 	github.com/hashicorp/consul/api v1.1.0
-	github.com/json-iterator/go v1.1.11
+	github.com/json-iterator/go v1.1.6
 	github.com/openzipkin/zipkin-go v0.2.5
 	github.com/streadway/amqp v1.0.0
 	github.com/toolkits/net v0.0.0-20160910085801-3f39ab6fe3ce
