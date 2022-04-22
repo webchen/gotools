@@ -2,13 +2,12 @@ package jsontool
 
 import (
 	"bytes"
-	basejson "encoding/json"
+	"encoding/json"
 	"io/ioutil"
-
-	jsoniter "github.com/json-iterator/go"
+	//jsoniter "github.com/json-iterator/go"
 )
 
-var json = jsoniter.ConfigCompatibleWithStandardLibrary
+//var json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 // LoadFromFile  从文件里面加载
 func LoadFromFile(file string, v interface{}) {
@@ -37,6 +36,6 @@ func MarshalToString(v interface{}) string {
 // JSONStrFormat 格式化JSON字符串
 func JSONStrFormat(jsonstr string) string {
 	var str bytes.Buffer
-	_ = basejson.Indent(&str, []byte(jsonstr), "", "    ")
+	json.Indent(&str, []byte(jsonstr), "", "    ")
 	return str.String()
 }
