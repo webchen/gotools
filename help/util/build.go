@@ -56,7 +56,7 @@ func DoBuild(osName string) {
 	if base.BuildWithConfig() {
 		deployConfigPath := deployPath + "config" + string(os.PathSeparator)
 		dirtool.MustCreateDir(deployConfigPath)
-		confPath := dirtool.GetConfigPath(true)
+		confPath := dirtool.GetConfigPath()
 		confList, _ := ioutil.ReadDir(confPath)
 		for _, f := range confList {
 			fsBytes, _ := ioutil.ReadFile(confPath + f.Name())

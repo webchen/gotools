@@ -62,15 +62,12 @@ func GetParentDirectory(dirctory string) string {
 }
 
 // GetConfigPath ，获取项目的配置目录
-func GetConfigPath(isBuild bool) string {
+func GetConfigPath() string {
 	if configPath != "" {
 		return configPath
 	}
 
 	configPath = GetBasePath() + "config" + string(os.PathSeparator)
-	if isBuild {
-		return GetCWDPath() + "config" + string(os.PathSeparator)
-	}
 	if !PathIsExists(configPath) {
 		configPath = GetCWDPath() + "config" + string(os.PathSeparator)
 	}
