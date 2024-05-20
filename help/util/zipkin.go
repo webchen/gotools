@@ -2,7 +2,7 @@ package util
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -67,7 +67,7 @@ func QueryWithZipKin(method string, url string, jsonMap map[string]interface{}) 
 	}
 
 	defer res.Body.Close()
-	b, _ := ioutil.ReadAll(res.Body)
+	b, _ := io.ReadAll(res.Body)
 	return string(b)
 }
 

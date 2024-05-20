@@ -92,16 +92,6 @@ func Warning(message string, data interface{}, withTrace bool) {
 	} else {
 		info.Trace = ""
 	}
-	val, isString := data.(string)
-	if isString && strings.TrimSpace(val) != "" {
-		info.Data = jsontool.JSONStrFormat(val)
-	} else {
-		if err, isErr := data.(error); isErr {
-			info.Data = err.Error()
-		} else {
-			info.Data = jsontool.JSONStrFormat(jsontool.MarshalToString(data))
-		}
-	}
 
 	s := jsontool.MarshalToString(info)
 	if fileLevel <= 2 {
@@ -119,22 +109,12 @@ func Warning(message string, data interface{}, withTrace bool) {
 
 // Error 日志
 func Error(message string, data interface{}) {
-
 	info := &base.LogObj{}
 	info.Message = message
 	info.Time = time.Now().Format(def.FullTimeMicroFormat)
 	info.Level = "Error"
 	info.Trace = Trace(message)
-	val, isString := data.(string)
-	if isString && strings.TrimSpace(val) != "" {
-		info.Data = jsontool.JSONStrFormat(val)
-	} else {
-		if err, isErr := data.(error); isErr {
-			info.Data = err.Error()
-		} else {
-			info.Data = jsontool.JSONStrFormat(jsontool.MarshalToString(data))
-		}
-	}
+
 	s := jsontool.MarshalToString(info)
 	if fileLevel <= 3 {
 		fileLogger.SetPrefix("[Error] ")
@@ -150,7 +130,6 @@ func Error(message string, data interface{}) {
 
 // Message 日志
 func Message(message string, data interface{}, withTrace bool) {
-
 	info := &base.LogObj{}
 	info.Message = message
 	info.Time = time.Now().Format(def.FullTimeMicroFormat)
@@ -159,16 +138,6 @@ func Message(message string, data interface{}, withTrace bool) {
 		info.Trace = Trace(message)
 	} else {
 		info.Trace = ""
-	}
-	val, isString := data.(string)
-	if isString && strings.TrimSpace(val) != "" {
-		info.Data = jsontool.JSONStrFormat(val)
-	} else {
-		if err, isErr := data.(error); isErr {
-			info.Data = err.Error()
-		} else {
-			info.Data = jsontool.JSONStrFormat(jsontool.MarshalToString(data))
-		}
 	}
 
 	s := jsontool.MarshalToString(info)

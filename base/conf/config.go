@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"io/ioutil"
 	"log"
 	"os"
 	"path"
@@ -120,7 +119,7 @@ func initConsul() {
 			continue
 		}
 		fileName := dirtool.GetConfigPath() + v.(string) + ".json"
-		ioutil.WriteFile(fileName, r.Value, 0x666)
+		os.WriteFile(fileName, r.Value, 0x666)
 		fmt.Println("write config file : ", fileName)
 	}
 }
@@ -150,7 +149,7 @@ func initApollo() {
 	cache := client.GetConfigCache(c.NamespaceName)
 	cache.Range(func(key, value interface{}) bool {
 		configFilePath := dirtool.GetConfigPath() + key.(string) + ".json"
-		ioutil.WriteFile(configFilePath, []byte(value.(string)), 0777)
+		os.WriteFile(configFilePath, []byte(value.(string)), 0777)
 		//fmt.Printf("key: %+v   val:%+v\n", key, value)
 		return true
 	})

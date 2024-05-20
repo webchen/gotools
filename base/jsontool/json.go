@@ -3,7 +3,7 @@ package jsontool
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	//jsoniter "github.com/json-iterator/go"
 )
 
@@ -12,7 +12,7 @@ import (
 // LoadFromFile  从文件里面加载
 func LoadFromFile(file string, v interface{}) {
 	// 读取JSON文件内容 返回字节切片
-	bytes, _ := ioutil.ReadFile(file)
+	bytes, _ := os.ReadFile(file)
 	// 将字节切片映射到指定结构上
 	json.Unmarshal(bytes, &v)
 }

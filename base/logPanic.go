@@ -2,7 +2,6 @@ package base
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -76,7 +75,7 @@ func getClearLogCmdPath(fullFile string, f string) (path string) {
 echo '' > %s
 `, fullFile)
 	path = dirtool.GetBasePath() + f + ".sh"
-	ioutil.WriteFile(path, []byte(info), 0777)
+	os.WriteFile(path, []byte(info), 0777)
 	return path
 }
 
@@ -148,15 +147,15 @@ func LogPanicErr(err interface{}, message string) {
 }
 
 // TraceInfo 返回TRACE信息
-func TraceInfo(v ...interface{}) string {
-	errstr := fmt.Sprintf("%s%strace: %+v", separator, fmt.Sprintln(), v) + fmt.Sprintln()
+func TraceInfo(v interface{}) string {
+	errstr := fmt.Sprintf("%+v%s%s", v, fmt.Sprintln(), separator) + fmt.Sprintln()
 	i := 2
 	for {
 		pc, file, line, ok := runtime.Caller(i)
 		if !ok || i > 40 {
 			break
 		}
-		errstr += fmt.Sprintln() + fmt.Sprintf("stack: %d [file: %s:%d] [func: %s] [line: %d]\n", i-1, file, line, runtime.FuncForPC(pc).Name(), line)
+		errstr += fmt.Sprintf("stack: %d [file: %s:%d] [func: %s] [line: %d]\n", i-1, file, line, runtime.FuncForPC(pc).Name(), line)
 		i++
 	}
 	errstr += separator

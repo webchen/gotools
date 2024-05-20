@@ -2,7 +2,6 @@ package util
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -14,7 +13,7 @@ import (
 	"github.com/webchen/gotools/base/dirtool"
 )
 
-//var buildDir = "build" + string(os.PathSeparator)
+// var buildDir = "build" + string(os.PathSeparator)
 var buildDir = ""
 var osList = [4]string{"linux", "windows", "mac", "freebsd"}
 var fileName = conf.GetConfig("system.deploy.fileName", "gotools").(string)
@@ -57,11 +56,11 @@ func DoBuild(osName string) {
 		deployConfigPath := deployPath + "config" + string(os.PathSeparator)
 		dirtool.MustCreateDir(deployConfigPath)
 		confPath := dirtool.GetConfigPath()
-		confList, _ := ioutil.ReadDir(confPath)
+		confList, _ := os.ReadDir(confPath)
 		for _, f := range confList {
-			fsBytes, _ := ioutil.ReadFile(confPath + f.Name())
+			fsBytes, _ := os.ReadFile(confPath + f.Name())
 			info := string(fsBytes)
-			err := ioutil.WriteFile(deployConfigPath+f.Name(), []byte(info), 0777)
+			err := os.WriteFile(deployConfigPath+f.Name(), []byte(info), 0777)
 			if err != nil {
 				panic(err)
 			}
@@ -81,7 +80,7 @@ func DoBuild(osName string) {
 		tmpFile += ".sh"
 	}
 	cmdStr := getCmd(osName, deployPath+fileName, includeFile)
-	ioutil.WriteFile(tmpFile, []byte(cmdStr), 0666)
+	os.WriteFile(tmpFile, []byte(cmdStr), 0666)
 
 	cmd := exec.Command(tmpFile)
 	err := cmd.Run()

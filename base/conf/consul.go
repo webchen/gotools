@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
-	"time"
 
 	consulapi "github.com/hashicorp/consul/api"
 	"github.com/webchen/gotools/help/str"
@@ -39,7 +38,6 @@ func initConsulClient() {
 	}
 	consulConfig := consulapi.DefaultConfig()
 	consulConfig.Token = baseConfigData["consul"]["token"].(string)
-	rand.Seed(time.Now().Unix())
 	serverList := baseConfigData["consul"]["server"].([]interface{})
 
 	consulConfig.Address = serverList[rand.Intn(len(serverList))].(string)
